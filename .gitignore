@@ -1,0 +1,9 @@
+subjects/*
+queries/*
+results/*
+.nextflow*
+*.html
+.DS_Store
+.vscode/
+.idea/
+run_example.sh

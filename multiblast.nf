@@ -1,0 +1,44 @@
+#!/usr/bin/env nextflow
+
+/*
+ * MultiBLAST Pipeline
+ * Creates databases in parallel for multiple subjects and runs BLAST in parallel
+ */
+
+// Include process modules
+include { makeDb } from './bin/makedb.nf'
+include { blastAll } from './bin/run_blast.nf'
+// include { publishResults } from './bin/parse_out.nf'
+
+// Define the workflow
+workflow {
+    
+    // Input validation
+    if (!params.query) {
+        error "Query file not specified. Use --query parameter."
+    }
+    if (!params.db_dir) {
+        error "Database directory not specified. Use --db_dir parameter."
+    }
+    
+    // Channel from the query file
+    query_ch = Channel.fromPath(params.query)
+    
+    // Channel from the database directory
+    db_files_ch = Channel.fromPath("${params.db_dir}/*.fasta")
+    
+    // Create databases in parallel
+    makeDb(db_files_ch)
+    
+    // Run BLAST in parallel for each database
+    blastAll(query_ch, makeDb.out.db_files)
+    
+    // Collect and publish results
+    // publishResults(blastAll.out.blast_results)
+}
+
+
+// Process to run BLAST for each database
+
+
+// Process to collect and organize results

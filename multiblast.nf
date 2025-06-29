@@ -24,14 +24,23 @@ workflow {
     query_ch = Channel.fromPath(params.query)
 
     // db dir channel
-    db_files_ch = Channel.fromPath("${params.db_dir}/*.fasta")
+    db_files_ch = Channel.fromPath("${params.db_dir}/*.{fa,fasta}")
     
     // Create databases in parallel
     makeDb(db_files_ch)
     
+    
+    query_ch
+        .combine(makeDb.out.db_files)
+        //.view()
+
+
     // Run BLAST in parallel for each database
-    blastAll(query_ch, makeDb.out.db_files)
-    makeDb.out.db_files.view()
+    blastAll(query_ch.combine(makeDb.out.db_files))
+
+    // blastAll(query_ch, makeDb.out.db_files)
+
+    // makeDb.out.db_files.view()
     
     // Collect and publish results
     // publishResults(blastAll.out.blast_results)

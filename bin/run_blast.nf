@@ -6,7 +6,7 @@ process blastAll {
     
     input:
         tuple path(query_file), val(db_name), path(db_files)
-    
+            
     output:
         path "*.blast.out", emit: blast_results
     

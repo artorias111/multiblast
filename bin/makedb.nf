@@ -8,7 +8,7 @@ process makeDb {
         path fasta_file
     
     output:
-        tuple val(fasta_file.baseName), path("*.nhr"), path("*.nin"), path("*.nsq"), path("*.nog"), path("*.not"), path("*.ntf"), path("*.nto"), emit: db_files
+        tuple val(fasta_file.baseName), path("*.n*"), emit: db_files
     
     script:
         def db_name = fasta_file.baseName

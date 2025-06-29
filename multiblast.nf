@@ -12,19 +12,18 @@ include { blastAll } from './bin/run_blast.nf'
 
 // Define the workflow
 workflow {
-    
     // Input validation
     if (!params.query) {
-        error "Query file not specified. Use --query parameter."
+        error "Query file not specified. Use --query"
     }
     if (!params.db_dir) {
-        error "Database directory not specified. Use --db_dir parameter."
+        error "Database directory not specified. Use --db_dir"
     }
     
-    // Channel from the query file
+    // query file channel
     query_ch = Channel.fromPath(params.query)
-    
-    // Channel from the database directory
+
+    // db dir channel
     db_files_ch = Channel.fromPath("${params.db_dir}/*.fasta")
     
     // Create databases in parallel
@@ -32,13 +31,9 @@ workflow {
     
     // Run BLAST in parallel for each database
     blastAll(query_ch, makeDb.out.db_files)
+    makeDb.out.db_files.view()
     
     // Collect and publish results
     // publishResults(blastAll.out.blast_results)
 }
 
-
-// Process to run BLAST for each database
-
-
-// Process to collect and organize results

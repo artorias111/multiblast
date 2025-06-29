@@ -5,8 +5,7 @@ process blastAll {
     publishDir "${params.outdir}/blast_results", mode: 'copy'
     
     input:
-        path query_file
-        tuple val(db_name), path(db_files)
+        tuple path(query_file), val(db_name), path(db_files)
     
     output:
         path "*.blast.out", emit: blast_results

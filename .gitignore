@@ -8,3 +8,4 @@ results/*
 .idea/
 run_example.sh
 work/*
+test_dir

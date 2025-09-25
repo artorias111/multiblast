@@ -8,6 +8,8 @@
 // Include process modules
 include { makeDb } from './bin/makedb.nf'
 include { blastAll } from './bin/run_blast.nf'
+include { tblastNAll } from './bin/run_blast.nf'
+
 // include { publishResults } from './bin/parse_out.nf'
 
 // Define the workflow
@@ -36,7 +38,14 @@ workflow {
 
 
     // Run BLAST in parallel for each database
-    blastAll(query_ch.combine(makeDb.out.db_files))
+
+    if (params.runMode == 'protein_query') {
+        tblastNAll(query_ch.combine(makeDb.out.db_files))
+    }
+
+    if (params.runMode == 'default') {
+        blastAll(query_ch.combine(makeDb.out.db_files))
+    }
 
     // blastAll(query_ch, makeDb.out.db_files)
 
